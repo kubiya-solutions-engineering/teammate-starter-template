@@ -1,0 +1,64 @@
+tools:
+  - name: list_s3_buckets
+    image: python:3.11
+    description: "List all S3 buckets in your AWS account using the specified AWS CLI profile."
+    alias: list-s3-buckets
+    content: |
+      # Set default values for environment variables
+      REPO_URL="${REPO_URL:-https://github.com/your-repo/your-project}"
+      REPO_NAME="${REPO_NAME:-your-project}"
+      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-src/tool-example}"
+      REPO_BRANCH="${REPO_BRANCH:-main}"
+      REPO_DIR="${REPO_DIR:-$REPO_NAME}"
+      BIN_DIR="${BIN_DIR:-/usr/local/bin}"
+      APT_CACHE_DIR="${APT_CACHE_DIR:-/var/cache/apt/archives}"
+      PIP_CACHE_DIR="${PIP_CACHE_DIR:-/var/cache/pip}"
+
+      # Create cache directories
+      mkdir -p "$APT_CACHE_DIR"
+      mkdir -p "$BIN_DIR"
+      mkdir -p "$PIP_CACHE_DIR"
+
+      install_git() {
+        apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
+      }
+
+      install_pip_dependencies() {
+        export PIP_CACHE_DIR="$PIP_CACHE_DIR"
+        pip install boto3 --cache-dir "$PIP_CACHE_DIR" --quiet > /dev/null
+      }
+
+      # Install git
+      install_git
+
+      # Install pip dependencies
+      install_pip_dependencies
+
+      # Clone repository if not already cloned
+      if [ ! -d "$REPO_DIR" ]; then
+        if [ -n "$GH_TOKEN" ]; then
+          GIT_ASKPASS_ENV=$(mktemp)
+          chmod +x "$GIT_ASKPASS_ENV"
+          echo -e "#!/bin/sh\nexec echo \$GH_TOKEN" > "$GIT_ASKPASS_ENV"
+          GIT_ASKPASS="$GIT_ASKPASS_ENV" git clone --branch "$REPO_BRANCH" "https://$GH_TOKEN@$(echo $REPO_URL | sed 's|https://||')" "$REPO_DIR" > /dev/null
+          rm "$GIT_ASKPASS_ENV"
+        else
+          git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_DIR" > /dev/null
+        fi
+      fi
+
+      # cd into the cloned repo
+      cd "${REPO_DIR}/${SOURCE_CODE_DIR}"
+
+      # Run the script
+      export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
+      exec python list_s3_buckets.py --profile "{{ .profile }}"
+    args:
+      - name: profile
+        description: 'AWS CLI profile name'
+        required: true
+    env:
+      - AWS_PROFILE # AWS profile to use for the operation
+    with_files:
+      - source: $HOME/.aws/credentials
+        destination: /root/.aws/credentials
