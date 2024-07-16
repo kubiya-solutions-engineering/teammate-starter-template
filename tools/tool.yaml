@@ -1,15 +1,28 @@
 tools:
+  # 1. Change this to the name of your tool   
   - name: list_s3_buckets
     image: python:3.11
+    # 2. Update the description to fit your tool's purpose
     description: "List all S3 buckets in your AWS account using the specified AWS CLI profile."
+    # 3. Change this alias to a short, easy-to-type name for your tool
     alias: list-s3-buckets
     content: |
       # Set default values for environment variables
+      # 4. Update the URL to point to your repository
       REPO_URL="${REPO_URL:-https://github.com/your-repo/your-project}"
+
+      # 5. Change this to the name of your repository
       REPO_NAME="${REPO_NAME:-your-project}"
+
+      # 6. Specify the directory where your source code is located
       SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-src/tool-example}"
+
+      # 7. Set this to the branch you want to use (e.g., main, dev)
       REPO_BRANCH="${REPO_BRANCH:-main}"
+
+      # 8. Directory name for cloning the repo
       REPO_DIR="${REPO_DIR:-$REPO_NAME}"
+
       BIN_DIR="${BIN_DIR:-/usr/local/bin}"
       APT_CACHE_DIR="${APT_CACHE_DIR:-/var/cache/apt/archives}"
       PIP_CACHE_DIR="${PIP_CACHE_DIR:-/var/cache/pip}"
@@ -19,6 +32,7 @@ tools:
       mkdir -p "$BIN_DIR"
       mkdir -p "$PIP_CACHE_DIR"
 
+      # 9. Add more dependencies here if needed
       install_git() {
         apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
       }
@@ -52,13 +66,19 @@ tools:
 
       # Run the script
       export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
+
+      # 10. Update this to match the script's location and name within your repository
       exec python list_s3_buckets.py --profile "{{ .profile }}"
     args:
+      # 11. Define the command-line arguments for your script
       - name: profile
+        # 12. Update the description to explain what the argument is
         description: 'AWS CLI profile name'
         required: true
     env:
-      - AWS_PROFILE # AWS profile to use for the operation
+      # 13. List environment variables required by your tool
+      - AWS_PROFILE
+    # 14. Only include this section if your tool requires specific files, such as AWS credentials
     with_files:
       - source: $HOME/.aws/credentials
         destination: /root/.aws/credentials
