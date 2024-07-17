@@ -32,11 +32,7 @@ Welcome to the teammate-starter-template! This guide will walk you through the s
    - Test your setup to ensure everything is working correctly.
 
 **Step 6: (If applicable) Add Python package dependencies.**
-   - If your script is written in Python and requires additional packages, list them in the `requirements.txt` file in the root directory.
-   - Install the packages using:
-     ```sh
-     pip install -r requirements.txt
-     ```
+   - If your script is written in Python and requires additional packages, list them in the `requirements.txt` file in the root directory. If not applicable, you may remove the install_pip_dependencies call from the tool.yaml.
 
 Follow these steps to get your tool up and running using the teammate-starter-template. If you encounter any issues, refer to the documentation or reach out for support.
 
