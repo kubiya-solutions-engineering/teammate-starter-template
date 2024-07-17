@@ -37,9 +37,10 @@ tools:
         apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
       }
 
+      # Function to install pip dependencies if not cached (only needed if packages are added to requirements.txt)
       install_pip_dependencies() {
         export PIP_CACHE_DIR="$PIP_CACHE_DIR"
-        pip install boto3 --cache-dir "$PIP_CACHE_DIR" --quiet > /dev/null
+        pip install -r requirements.txt --cache-dir "$PIP_CACHE_DIR" --quiet > /dev/null
       }
 
       # Install git
@@ -66,7 +67,6 @@ tools:
 
       # Run the script
       export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
-
       # 10. Update this to match the script's location and name within your repository
       exec python list_s3_buckets.py --profile "{{ .profile }}"
     args:

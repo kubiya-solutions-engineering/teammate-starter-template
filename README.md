@@ -12,29 +12,41 @@ The Tool YAML file defines the configuration and behavior of your tool. Here is 
 
 ```yaml
 tools:
-  - name: list_s3_buckets # 1. Change this to the name of your tool
+  # 1. Change this to the name of your tool   
+  - name: list_s3_buckets
     image: python:3.11
-    description: "List all S3 buckets in your AWS account using the specified AWS CLI profile." # 2. Update the description to fit your tool's purpose
-    alias: list-s3-buckets # 3. Change this alias to a short, easy-to-type name for your tool
+    # 2. Update the description to fit your tool's purpose
+    description: "List all S3 buckets in your AWS account using the specified AWS CLI profile."
+    # 3. Change this alias to a short, easy-to-type name for your tool
+    alias: list-s3-buckets
     content: |
-      # Set default values for environment variables
-      REPO_URL="${REPO_URL:-https://github.com/your-repo/your-project}" # 4. Update the URL to point to your repository
-      REPO_NAME="${REPO_NAME:-your-project}" # 4. Change this to the name of your repository
-      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-src/tool-example}" # 4. Specify the directory where your source code is located
-      REPO_BRANCH="${REPO_BRANCH:-main}" # 4. Set this to the branch you want to use (e.g., main, dev)
-      REPO_DIR="${REPO_DIR:-$REPO_NAME}" # 4. Directory name for cloning the repo
+      # 4. Update the URL to point to your repository
+      REPO_URL="${REPO_URL:-https://github.com/your-repo/your-project}"
+
+      # 5. Change this to the name of your repository
+      REPO_NAME="${REPO_NAME:-your-project}"
+
+      # 6. Specify the directory where your source code is located
+      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-src/tool-example}"
+
+      # 7. Set this to the branch you want to use (e.g., main, dev)
+      REPO_BRANCH="${REPO_BRANCH:-main}"
+
+      # 8. Directory name for cloning the repo
+      REPO_DIR="${REPO_DIR:-$REPO_NAME}"
+
       BIN_DIR="${BIN_DIR:-/usr/local/bin}"
       APT_CACHE_DIR="${APT_CACHE_DIR:-/var/cache/apt/archives}"
       PIP_CACHE_DIR="${PIP_CACHE_DIR:-/var/cache/pip}"
 
-      # Create cache directories
+      # Create cache directories (DO NOT REMOVE THE CREATION OF CACHE DIRECTORIES)
       mkdir -p "$APT_CACHE_DIR"
       mkdir -p "$BIN_DIR"
       mkdir -p "$PIP_CACHE_DIR"
 
+      # 9. Add more dependencies here if needed
       install_git() {
         apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
-        # 4. Add more dependencies here if needed
       }
 
       install_pip_dependencies() {
@@ -66,36 +78,76 @@ tools:
 
       # Run the script
       export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
-      exec python list_s3_buckets.py --profile "{{ .profile }}" # 4. Update this to match the script's location and name within your repository
+
+      # 10. Update this to match the script's location and name within your repository
+      exec python list_s3_buckets.py --profile "{{ .profile }}"
     args:
-      - name: profile # 5. Define the command-line arguments for your script
-        description: 'AWS CLI profile name' # 5. Update the description to explain what the argument is
+      # 11. Define the command-line arguments for your script
+      - name: profile
+        # 12. Update the description to explain what the argument is
+        description: 'AWS CLI profile name'
         required: true
     env:
-      - AWS_PROFILE # 6. List environment variables required by your tool
-    with_files: # 7. Only include this section if your tool requires specific files, such as AWS credentials
+      # 13. List environment variables required by your tool
+      - AWS_PROFILE
+    # 14. Only include this section if your tool requires specific files, such as AWS credentials
+    with_files:
       - source: $HOME/.aws/credentials
         destination: /root/.aws/credentials
 ```
 
-Customization Steps:
-Name: Change the name of the tool to something unique and descriptive.
-Description: Update the description to explain what the tool does.
-Alias: Change the alias to a short, memorable name for the tool.
-Within content:
-Repo URL: Set the URL of your repository.
-Repo Name: Change to the name of your repository.
-Source Code Directory: Specify the directory containing your source code.
-Repo Branch: Set to the branch you want to use (e.g., main, dev).
-Repo Directory: Directory name for cloning the repository.
-Dependencies: Add any additional dependencies needed in the install_git function.
-Exec Python: Update the command to run your specific script within the cloned repository.
-Args: Define the command-line arguments for your script, including names and descriptions.
-Env: List any environment variables your tool requires.
-With Files: Only include this section if your tool needs to access specific files, like AWS credentials.
+### Customization Steps
 
-Script File
-The script file contains the logic for your tool. Here's an example script for listing S3 buckets:
+#### 1. **Name**
+   - **Action:** Change the name of the tool to something unique and descriptive.
+
+#### 2. **Description**
+   - **Action:** Update the description to explain what the tool does.
+
+#### 3. **Alias**
+   - **Action:** Change the alias to a short, memorable name for the tool.
+
+---
+
+### Within Content
+
+#### 4. **Repo URL**
+   - **Action:** Set the URL of your repository.
+
+#### 5. **Repo Name**
+   - **Action:** Change to the name of your repository.
+
+#### 6. **Source Code Directory**
+   - **Action:** Specify the directory containing your source code.
+
+#### 7. **Repo Branch**
+   - **Action:** Set to the branch you want to use (e.g., main, dev).
+
+#### 8. **Repo Directory**
+   - **Action:** Directory name for cloning the repository.
+
+#### 9. **Dependencies**
+   - **Action:** Add any additional dependencies needed in the `install_git` function.
+
+#### 10. **Exec Python**
+   - **Action:** Update the command to run your specific script within the cloned repository.
+
+#### 11. **Args**
+   - **Action:** Define the command-line arguments for your script, including names and descriptions.
+
+#### 12. **Env**
+   - **Action:** List any environment variables your tool requires.
+
+---
+
+### With Files
+
+> **Note:** Only include this section if your tool needs to access specific files, like AWS credentials.
+
+
+
+### Script File
+The `tool-example.py` contains the logic for your tool. Here's an example script for listing S3 buckets:
 
 ```python
 import boto3
@@ -116,12 +168,23 @@ if __name__ == "__main__":
     list_s3_buckets(args.profile)
 ```
 
-Customization Steps:
-Functionality: Modify the script to implement the functionality you need.
-Arguments: Add or change command-line arguments as required by your tool.
-Dependencies: Ensure any additional dependencies are installed in the Tool YAML file.
-Terraform.tfvars
-The terraform.tfvars file contains configuration variables for your Terraform setup:
+### Customization Steps
+
+#### 1. **Functionality**
+   - **Action:** Modify the script to implement the functionality you need.
+
+#### 2. **Arguments**
+   - **Action:** Add or change command-line arguments as required by your tool.
+
+#### 3. **Dependencies**
+   - **Action:** Ensure any additional dependencies are installed in the Tool YAML file.
+
+---
+
+### Terraform.tfvars
+
+The `terraform.tfvars` file contains configuration variables for your Terraform setup:
+
 
 ```hcl
 agent_name         = "S3 Bucket Lister"
@@ -177,11 +240,25 @@ debug = true
 dry_run = true
 ```
 
-Customization Steps:
-Agent Name: Change the agent_name to reflect the purpose of your tool.
-Description: Update the agent_description and agent_instructions to describe your tool and its functionality.
-Approval Workflow: Configure the approval settings as needed, including the Slack channel and approving users.
-Integrations: List any integrations your tool needs (e.g., AWS, Slack, GitHub).
-ACL: Specify the users and groups who can access the agent.
-Environment Variables: Set any required environment variables.
-Debug and Dry Run: Enable or disable debug mode and dry run as needed.
+### Customization Steps
+
+#### 1. **Agent Name**
+   - **Action:** Change the `agent_name` to reflect the purpose of your tool.
+
+#### 2. **Description**
+   - **Action:** Update the `agent_description` and `agent_instructions` to describe your tool and its functionality.
+
+#### 3. **Approval Workflow**
+   - **Action:** Configure the approval settings as needed, including the Slack channel and approving users.
+
+#### 4. **Integrations**
+   - **Action:** List any integrations your tool needs (e.g., AWS, Slack, GitHub).
+
+#### 5. **ACL**
+   - **Action:** Specify the users and groups who can access the agent.
+
+#### 6. **Environment Variables**
+   - **Action:** Set any required environment variables.
+
+#### 7. **Debug and Dry Run**
+   - **Action:** Enable or disable debug mode and dry run as needed.
