@@ -30,7 +30,6 @@ Welcome to the teammate-starter-template! This guide will walk you through the s
      terraform apply
      ```
    - Test your setup to ensure everything is working correctly.
-   - Once tested, share the updated repository with your team. They can clone the repo, run `terraform init` and `terraform apply` to set up the tool in their environment.
 
 **Step 6: (If applicable) Add Python package dependencies.**
    - If your script is written in Python and requires additional packages, list them in the `requirements.txt` file in the root directory.
