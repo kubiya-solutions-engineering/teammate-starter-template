@@ -78,7 +78,7 @@ tools:
     env:
       # 13. List environment variables required by your tool
       - AWS_PROFILE
-    # 14. Only include this section if your tool requires specific files, such as AWS credentials
+    # 14. Only include this section if your tool requires specific files, such as AWS credentials (which are passed to the teammate if you add the AWS_PROFILE environment variable)
     with_files:
       - source: $HOME/.aws/credentials
         destination: /root/.aws/credentials
