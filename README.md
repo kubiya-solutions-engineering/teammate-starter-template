@@ -46,6 +46,6 @@ Follow these steps to get your tool up and running using the teammate-starter-te
 
 The Starter Kit for creating custom tools! This guide will help you set up and customize three essential files to fit your use cases:
 
-1. [Tool YAML](#tool-yaml)
-2. [Script File](#script-file)
-3. [Terraform.tfvars](#terraformtfvars)
+1. [Tool YAML](https://github.com/kubiya-solutions-engineering/teammate-starter-template/tree/main/tools) (#tool-yaml)
+2. [Script File](https://github.com/kubiya-solutions-engineering/teammate-starter-template/tree/main/src) (#script-file)
+3. [Terraform.tfvars](https://github.com/kubiya-solutions-engineering/teammate-starter-template/tree/main/terraform) (#terraformtfvars)
