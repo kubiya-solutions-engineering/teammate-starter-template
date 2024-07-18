@@ -82,7 +82,7 @@ tools:
     env:
       # 13. List environment variables required by your tool
       - AWS_PROFILE
-    # 14. Only include this section if your tool requires specific files, such as AWS credentials
+    # 14. Only include this section if your tool requires specific files, such as AWS credentials (which are passed to the teammate if you add the AWS_PROFILE environment variable)
     with_files:
       - source: $HOME/.aws/credentials
         destination: /root/.aws/credentials
@@ -128,10 +128,10 @@ tools:
    - **Action:** Define the command-line arguments for your script, including names and descriptions.
 
 #### 12. **Env**
-   - **Action:** List any environment variables your tool requires.
+   - **Action:** List any environment variables your tool requires AWS_PROFILE can be passed to the teammate if you have setup the AWS integration within the Kubiya web app.
 
 ---
 
 ### With Files
 
-> **Note:** Only include this section if your tool needs to access specific files, like AWS credentials.
+> **Note:** Only include this section if your tool needs to access specific files, like AWS credentials (which are passed to the teammate if you add the AWS_PROFILE environment variable)
