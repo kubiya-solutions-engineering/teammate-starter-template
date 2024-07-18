@@ -21,6 +21,12 @@ Welcome to the teammate-starter-template! This guide will walk you through the s
    - Include details like description, instructions, and any necessary secrets or environment variables.
 
 **Step 5: Run Terraform commands to initialize and apply your configuration.**
+
+   - First, go to the Kubiya web app ([https://app.kubiya.ai/configuration-hub/api-keys](https://app.kubiya.ai/configuration-hub/api-keys)) and create an API key.
+   - Export the API key locally:
+     ```sh
+     export KUBIYA_API_KEY=your_api_key_here
+     ```
    - Initialize Terraform:
      ```sh
      terraform init
