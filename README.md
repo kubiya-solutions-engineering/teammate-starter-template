@@ -13,8 +13,8 @@ Welcome to the teammate-starter-template! This guide will walk you through the s
 **Step 2: Replace the script in the `src` directory with your script.**
    - Ensure your script is placed in the `src` directory and remove the existing placeholder script.
 
-**Step 3: Update the YAML in the `tool` directory to call your script.**
-   - Open the `tool/content.sh` file and update it to call your script.
+**Step 3: Update the YAML in the `tools` directory to call your script.**
+   - Open the `tools/tool.yaml` file and update it to call your script.
    - Update all necessary fields, such as `name`, `alias`, `description`, `arguments`, and `env`. If your script requires secrets that exist in Kubiya, bring them in here.
 
 **Step 4: Update the `terraform.tfvars` file with agent info.**
